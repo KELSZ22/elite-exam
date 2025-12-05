@@ -7,14 +7,18 @@ use App\Http\Requests\StoreAlbumRequest;
 use App\Http\Requests\UpdateAlbumRequest;
 use App\Models\Album;
 use App\Models\Artist;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class AlbumController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $albums = Album::select('id', 'artist_id', 'year', 'name', 'sales', 'updated_at')
             ->with('artist:id,code,name')
+            ->when($request->has('search'), function ($query) use ($request) {
+                $query->whereFullText('name', $request->search);
+            })
             ->paginate(10);
 
         return Inertia::render('Album/Index', [

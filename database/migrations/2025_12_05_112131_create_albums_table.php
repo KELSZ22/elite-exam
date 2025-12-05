@@ -16,9 +16,11 @@ return new class extends Migration
             $table->foreignId('artist_id')->constrained('artists')->cascadeOnDelete();
             $table->year('year');
             $table->string('name');
-            $table->decimal('sales', 10, 2)->default(0);
+            $table->decimal('sales', 15, 2)->default(0);
             $table->softDeletes();
             $table->timestamps();
+
+            $table->fullText('name');
         });
     }
 

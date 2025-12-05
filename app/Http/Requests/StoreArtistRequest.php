@@ -11,7 +11,7 @@ class StoreArtistRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,23 @@ class StoreArtistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'code' => ['required', 'string', 'max:50', 'unique:artists,code'],
+            'name' => ['required', 'string', 'max:255'],
+        ];
+    }
+    public function messages(): array
+    {
+        return [
+            'code.required' => 'The Code field is required.',
+            'code.unique' => 'The Code has already been taken.',
+            'name.required' => 'The Artist name field is required.',
+        ];
+    }
+    public function attributes(): array
+    {
+        return [
+            'code' => 'Code',
+            'name' => 'Artist Name',
         ];
     }
 }

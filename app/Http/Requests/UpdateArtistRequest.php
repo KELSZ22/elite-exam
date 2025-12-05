@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateArtistRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UpdateArtistRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,8 @@ class UpdateArtistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'code' => ['sometimes', 'string', 'max:50', Rule::unique('artists', 'code')->ignore($this->artist)],
+            'name' => ['sometimes', 'string', 'max:255'],
         ];
     }
 }
