@@ -12,7 +12,8 @@ use Inertia\Inertia;
 
 class AlbumController extends Controller
 {
-    public function index(Request $request)
+
+    public function index( Request $request )
     {
         $albums = Album::select('id', 'artist_id', 'year', 'name', 'sales', 'updated_at')
             ->with('artist:id,code,name')
@@ -20,7 +21,6 @@ class AlbumController extends Controller
                 $query->whereFullText('name', $request->search);
             })
             ->paginate(10);
-
         return Inertia::render('Album/Index', [
             'albums' => $albums,
         ]);
@@ -29,19 +29,24 @@ class AlbumController extends Controller
 
     public function store(StoreAlbumRequest $request)
     {
-        Album::create($request->validated());
+        $album = Album::create($request->validated());
 
-        return redirect()->route('albums.index')
-            ->with('success', 'Album created successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Album created successfully',
+            'data' => $album
+        ], 201);
     }
 
     public function show(Album $album)
     {
-        $album->load('artist:id,code,name');
+        $album->with('artist:id,code,name')->get();
 
-        return Inertia::render('Album/Show', [
-            'album' => $album,
-        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Album fetched successfully',
+            'data' => $album
+        ], 200);
     }
     public function update(UpdateAlbumRequest $request, Album $album)
     {

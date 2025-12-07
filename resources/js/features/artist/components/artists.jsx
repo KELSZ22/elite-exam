@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
-import {
-    TableComponent,
-    ActionDropdown,
-    SearchInput,
-} from "../../../components";
-import { ArrowUpDown, Eye, Pencil, Plus, Trash } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { TableComponent, ConfirmModal, SearchInput } from "../../../components";
+import { ArrowUpDown, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePage, router } from "@inertiajs/react";
 import { useQueryParams } from "../../../hooks";
 import CreateArtist from "./create-artist";
+import UpdateArtist from "./update-artist";
+import ViewArtist from "./view-artist";
+import { getArtistActions, getArtistColumns } from "./artist-table-config";
+import { toast } from "sonner";
 
 function Artists() {
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [selectedArtist, setSelectedArtist] = useState(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [selectedArtistToDelete, setSelectedArtistToDelete] = useState(null);
     const { artists } = usePage().props;
 
     const {
@@ -33,72 +37,52 @@ function Artists() {
     }, [debouncedSearch]);
 
     const handleView = (row) => {
-        console.log("View:", row);
+        setSelectedArtist(row);
+        setIsViewModalOpen(true);
     };
 
     const handleEdit = (row) => {
-        console.log("Edit:", row);
+        setSelectedArtist(row);
+        setIsUpdateModalOpen(true);
     };
 
     const handleDelete = (row) => {
-        console.log("Delete:", row);
+        setSelectedArtistToDelete(row);
+        setIsDeleteModalOpen(true);
     };
 
-    const actions = [
-        { label: "View", onClick: handleView, icon: Eye },
-        { label: "Edit", onClick: handleEdit, icon: Pencil },
-        {
-            label: "Delete",
-            onClick: handleDelete,
-            icon: Trash,
-            variant: "destructive",
-            separator: true,
-        },
-    ];
+    const handleConfirmDelete = () => {
+        router.delete(`/artists/${selectedArtistToDelete.id}`, {
+            onSuccess: () => {
+                setIsDeleteModalOpen(false);
+                setSelectedArtistToDelete(null);
+                toast.success("Artist deleted successfully!");
+            },
+        });
+    };
 
-    const columns = [
-        {
-            key: "avatar",
-            label: "",
-            render: (_, row) => (
-                <Avatar className="w-10 h-10">
-                    <AvatarImage
-                        src={
-                            row.image ||
-                            `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                                row.name || ""
-                            )}&background=87af49&color=fff&size=128`
-                        }
-                        alt={row.name}
-                    />
-                    <AvatarFallback>
-                        {row.name?.substring(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                </Avatar>
-            ),
-        },
-        { key: "code", label: "CODE" },
-        { key: "name", label: "NAME" },
-        {
-            key: "albums_count",
-            label: "ALBUMS",
-            render: (value) => value || 0,
-        },
-        {
-            key: "actions",
-            label: "ACTIONS",
-            render: (_, row) => <ActionDropdown actions={actions} row={row} />,
-        },
-    ];
+    const actions = getArtistActions({
+        onView: handleView,
+        onEdit: handleEdit,
+        onDelete: handleDelete,
+    });
+
+    const columns = getArtistColumns(actions);
 
     const tableData = artists?.data || [];
 
     return (
-        <div className="container mx-auto">
+        <div className="container mx-auto px-4">
             <div className="flex flex-col gap-10">
                 <div className="flex justify-between items-center">
-                    <h1 className="text-5xl font-bold text-primary">Artists</h1>
-
+                    <div className="flex flex-col gap-2">
+                        <h1 className="text-5xl font-bold text-primary">
+                            Artists
+                        </h1>
+                        <p className="text-primary/70 text-sm">
+                            Manage your artist details.
+                        </p>
+                    </div>
                     <Button
                         variant="default"
                         onClick={() => setIsFormModalOpen(true)}
@@ -141,6 +125,25 @@ function Artists() {
             <CreateArtist
                 open={isFormModalOpen}
                 onOpenChange={setIsFormModalOpen}
+            />
+            <UpdateArtist
+                open={isUpdateModalOpen}
+                onOpenChange={setIsUpdateModalOpen}
+                artist={selectedArtist}
+            />
+            <ConfirmModal
+                open={isDeleteModalOpen}
+                onOpenChange={setIsDeleteModalOpen}
+                onConfirm={handleConfirmDelete}
+                confirmText="Delete"
+                cancelText="Cancel"
+                variant="destructive"
+            />
+            <ViewArtist
+                open={isViewModalOpen}
+                onOpenChange={setIsViewModalOpen}
+                artist={selectedArtist}
+                onClose={() => setIsViewModalOpen(false)}
             />
         </div>
     );

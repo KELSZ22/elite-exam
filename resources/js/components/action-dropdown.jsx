@@ -35,7 +35,7 @@ function ActionDropdown({ actions, row }) {
                             disabled={action.disabled}
                         >
                             {action.icon && (
-                                <action.icon className="mr-2 h-4 w-4" />
+                                <action.icon className="mr-2 h-4 w-4 hover:text-primary" />
                             )}
                             {action.label}
                         </DropdownMenuItem>

@@ -18,6 +18,7 @@ function Modal({
     footer,
     size = "md",
     showCloseButton = true,
+    noPadding = false,
 }) {
     const sizeClasses = {
         sm: "sm:max-w-sm",
@@ -30,19 +31,25 @@ function Modal({
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent
-                className={sizeClasses[size]}
+                className={`${sizeClasses[size]} ${
+                    noPadding ? "p-0 gap-0" : ""
+                }`}
                 showCloseButton={showCloseButton}
             >
                 {(title || description) && (
-                    <DialogHeader>
+                    <DialogHeader className={noPadding ? "p-6 pb-0" : ""}>
                         {title && <DialogTitle>{title}</DialogTitle>}
                         {description && (
                             <DialogDescription>{description}</DialogDescription>
                         )}
                     </DialogHeader>
                 )}
-                <div className="py-2">{children}</div>
-                {footer && <DialogFooter>{footer}</DialogFooter>}
+                <div className={noPadding ? "" : "py-2"}>{children}</div>
+                {footer && (
+                    <DialogFooter className={noPadding ? "p-6 pt-0" : ""}>
+                        {footer}
+                    </DialogFooter>
+                )}
             </DialogContent>
         </Dialog>
     );
@@ -57,6 +64,7 @@ Modal.propTypes = {
     footer: PropTypes.node,
     size: PropTypes.oneOf(["sm", "md", "lg", "xl", "full"]),
     showCloseButton: PropTypes.bool,
+    noPadding: PropTypes.bool,
 };
 
 function FormModal({
@@ -129,8 +137,10 @@ function ViewModal({
     title,
     description,
     children,
-    closeText = "Close",
     size = "md",
+    showCloseButton = false,
+    className,
+    noPadding = false,
 }) {
     return (
         <Modal
@@ -139,11 +149,9 @@ function ViewModal({
             title={title}
             description={description}
             size={size}
-            footer={
-                <Button variant="outline" onClick={() => onOpenChange(false)}>
-                    {closeText}
-                </Button>
-            }
+            showCloseButton={showCloseButton}
+            className={className}
+            noPadding={noPadding}
         >
             {children}
         </Modal>
@@ -158,6 +166,9 @@ ViewModal.propTypes = {
     children: PropTypes.node,
     closeText: PropTypes.string,
     size: PropTypes.oneOf(["sm", "md", "lg", "xl", "full"]),
+    showCloseButton: PropTypes.bool,
+    className: PropTypes.string,
+    noPadding: PropTypes.bool,
 };
 
 function ConfirmModal({

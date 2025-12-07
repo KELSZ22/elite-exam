@@ -10,7 +10,7 @@ function Navigation() {
     };
 
     return (
-        <nav className="bg-background border-b border-gray-600 sticky top-0 z-50 shadow-sm">
+        <nav className="bg-background/70 backdrop-blur-sm border-b border-gray-600 sticky top-0 z-50 shadow-sm shadow-primary/30">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     <div className="shrink-0">
