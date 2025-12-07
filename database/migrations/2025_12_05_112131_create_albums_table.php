@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('albums', function (Blueprint $table) {
             $table->id();
             $table->foreignId('artist_id')->constrained('artists')->cascadeOnDelete();
+            $table->string('image')->nullable();
             $table->year('year');
             $table->string('name');
-            $table->decimal('sales', 15, 2)->default(0);
+            $table->decimal('sales', 15, 2)->default(0)->nullable();
             $table->softDeletes();
             $table->timestamps();
 

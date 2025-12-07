@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+require_once __DIR__.'/web/auth.php';
 
-// Route::get('/', [AlbumController::class, 'index'])->name('album.index');
-
-require_once __DIR__.'/web/artist.php'; 
+Route::middleware('auth')->group(function () {
+    require_once __DIR__.'/web/dashboard.php';
+    require_once __DIR__.'/web/artist.php';
+    require_once __DIR__.'/web/album.php';
+});

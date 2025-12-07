@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { TableComponent, ConfirmModal, SearchInput } from "../../../components";
-import { ArrowUpDown, Plus } from "lucide-react";
+import {
+    TableComponent,
+    ConfirmModal,
+    SearchInput,
+    PageHeader,
+} from "../../../components";
+import { ArrowUpDown, Users, Plus, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { usePage, router } from "@inertiajs/react";
+import { usePage, router, Head } from "@inertiajs/react";
 import { useQueryParams } from "../../../hooks";
 import CreateArtist from "./create-artist";
 import UpdateArtist from "./update-artist";
@@ -73,37 +78,33 @@ function Artists() {
 
     return (
         <div className="container mx-auto px-4">
-            <div className="flex flex-col gap-10">
-                <div className="flex justify-between items-center">
-                    <div className="flex flex-col gap-2">
-                        <h1 className="text-5xl font-bold text-primary">
-                            Artists
-                        </h1>
-                        <p className="text-primary/70 text-sm">
-                            Manage your artist details.
-                        </p>
-                    </div>
-                    <Button
-                        variant="default"
-                        onClick={() => setIsFormModalOpen(true)}
-                    >
-                        <Plus /> Add Artist
-                    </Button>
-                </div>
-                <div className="flex items-center gap-2 w-full">
-                    <SearchInput
-                        value={search}
-                        onChange={handleSearch}
-                        placeholder="Search artists..."
-                    />
-                    <Button
-                        variant="outline"
-                        onClick={() => handleSort("name")}
-                        className="w-10 h-10 border-primary/50 hover:bg-primary/10"
-                    >
-                        <ArrowUpDown className="size-4 text-primary" />
-                    </Button>
-                </div>
+            <Head title="Musync - Artists" />
+            <PageHeader
+                title="Artists"
+                subtitle="Manage your artist details."
+                icon={Headphones}
+            >
+                <Button
+                    variant="default"
+                    onClick={() => setIsFormModalOpen(true)}
+                >
+                    <Plus /> Add Artist
+                </Button>
+            </PageHeader>
+
+            <div className="flex items-center gap-2 w-full mb-4">
+                <SearchInput
+                    value={search}
+                    onChange={handleSearch}
+                    placeholder="Search artists..."
+                />
+                <Button
+                    variant="outline"
+                    onClick={() => handleSort("name")}
+                    className="w-10 h-10 border-primary/50 hover:bg-primary/10"
+                >
+                    <ArrowUpDown className="size-4 text-primary" />
+                </Button>
             </div>
 
             <div className="mt-4">

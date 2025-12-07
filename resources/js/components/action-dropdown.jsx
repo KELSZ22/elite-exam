@@ -8,14 +8,27 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, MoreVertical } from "lucide-react";
 
-function ActionDropdown({ actions, row }) {
+function ActionDropdown({
+    actions,
+    row,
+    triggerClassName = "",
+    triggerVariant = "ghost",
+    triggerIcon = "horizontal",
+}) {
+    const IconComponent =
+        triggerIcon === "vertical" ? MoreVertical : MoreHorizontal;
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-4 w-4" />
+                <Button
+                    variant={triggerVariant}
+                    size="icon"
+                    className={`${triggerClassName} hover:bg-primary/10 hover:text-primary`}
+                >
+                    <IconComponent className="h-4 w-4" />
                     <span className="sr-only">Open menu</span>
                 </Button>
             </DropdownMenuTrigger>
@@ -58,6 +71,9 @@ ActionDropdown.propTypes = {
         })
     ).isRequired,
     row: PropTypes.object.isRequired,
+    triggerClassName: PropTypes.string,
+    triggerVariant: PropTypes.string,
+    triggerIcon: PropTypes.oneOf(["horizontal", "vertical"]),
 };
 
 export default ActionDropdown;

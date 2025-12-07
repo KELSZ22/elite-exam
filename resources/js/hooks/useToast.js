@@ -1,9 +1,5 @@
 import { toast } from "sonner";
 
-/**
- * useToast - Hook for showing toast notifications
- * @returns {object} Toast methods
- */
 export function useToast() {
     const showSuccess = (message, options = {}) => {
         toast.success(message, {
@@ -58,11 +54,9 @@ export function useToast() {
         loading: showLoading,
         dismiss,
         promise: showPromise,
-        // Raw toast for custom usage
         toast,
     };
 }
 
-// Export raw toast for direct usage
 export { toast };
 

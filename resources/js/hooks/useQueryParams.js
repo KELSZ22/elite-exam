@@ -2,17 +2,9 @@ import { useState, useCallback, useMemo } from "react";
 import { router } from "@inertiajs/react";
 import { useDebounce } from "./useDebounce";
 
-/**
- * useQueryParams - Hook for managing URL query parameters with search, sort, and pagination
- * @param {string} baseUrl - The base URL to navigate to
- * @param {object} options - Configuration options
- * @param {string} options.defaultSortOrder - Default sort order (default: "asc")
- * @param {number} options.debounceDelay - Debounce delay in ms (default: 500)
- */
 export function useQueryParams(baseUrl, options = {}) {
     const { defaultSortOrder = "asc", debounceDelay = 500 } = options;
 
-    // Get initial values from URL query params
     const urlParams = useMemo(
         () => new URLSearchParams(window.location.search),
         []
@@ -26,7 +18,6 @@ export function useQueryParams(baseUrl, options = {}) {
 
     const debouncedSearch = useDebounce(search, debounceDelay);
 
-    // Build params helper
     const buildParams = useCallback(
         (overrides = {}) => {
             const params = {};
@@ -43,7 +34,6 @@ export function useQueryParams(baseUrl, options = {}) {
         [debouncedSearch, sortBy, sortOrder]
     );
 
-    // Navigate with current params
     const navigate = useCallback(
         (overrides = {}, options = {}) => {
             const params = buildParams(overrides);
@@ -57,13 +47,11 @@ export function useQueryParams(baseUrl, options = {}) {
         [baseUrl, buildParams]
     );
 
-    // Handle search change
     const handleSearch = useCallback((e) => {
         const value = typeof e === "string" ? e : e.target.value;
         setSearch(value);
     }, []);
 
-    // Handle sort toggle
     const handleSort = useCallback(
         (column) => {
             let newOrder = "asc";
@@ -87,7 +75,6 @@ export function useQueryParams(baseUrl, options = {}) {
         [baseUrl, buildParams, sortBy, sortOrder]
     );
 
-    // Handle page change
     const handlePageChange = useCallback(
         (page) => {
             const params = { ...buildParams(), page };
@@ -100,22 +87,15 @@ export function useQueryParams(baseUrl, options = {}) {
     );
 
     return {
-        // State
         search,
         sortOrder,
         debouncedSearch,
-
-        // Setters
         setSearch,
         setSortBy,
         setSortOrder,
-
-        // Handlers
         handleSearch,
         handleSort,
         handlePageChange,
-
-        // Helpers
         buildParams,
         navigate,
     };

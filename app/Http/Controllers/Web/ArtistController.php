@@ -7,6 +7,7 @@ use App\Http\Requests\StoreArtistRequest;
 use App\Http\Requests\UpdateArtistRequest;
 use App\Models\Artist;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 
@@ -15,7 +16,11 @@ class ArtistController extends Controller
     public function index(Request $request)
     {
         $artists = Artist::withCount('albums')
-            ->orderBy('name', $request->get('sort_order', 'asc'))
+            ->when($request->filled('sort_order'), function ($query) use ($request) {
+                $query->orderBy('name', $request->sort_order);
+            }, function ($query) {
+                $query->latest();
+            })
             ->when($request->filled('search'), function ($query) use ($request) {
                 $search = $request->search;
                 $query->where(function ($q) use ($search) {
@@ -30,9 +35,23 @@ class ArtistController extends Controller
             'artists' => $artists,
         ]);
     }
+
     public function store(StoreArtistRequest $request)
     {
-        Artist::create($request->validated());
+        $data = $request->validated();
+        unset($data['image']);
+
+        $artist = Artist::create($data);
+
+        if ($request->hasFile('image')) {
+            $filename = $request->file('image')->getClientOriginalName();
+            $path = $request->file('image')->storeAs(
+                "artists/{$artist->id}",
+                $filename,
+                'public'
+            );
+            $artist->update(['image' => $path]);
+        }
 
         return redirect()->route('artists.index')
             ->with('success', 'Artist created successfully.');
@@ -46,9 +65,25 @@ class ArtistController extends Controller
             'artist' => $artist,
         ]);
     }
+
     public function update(UpdateArtistRequest $request, Artist $artist)
     {
-        $artist->update($request->validated());
+        $data = $request->validated();
+
+        if ($request->hasFile('image')) {
+            if ($artist->image) {
+                Storage::disk('public')->deleteDirectory("artists/{$artist->id}");
+            }
+            $filename = $request->file('image')->getClientOriginalName();
+            $path = $request->file('image')->storeAs(
+                "artists/{$artist->id}",
+                $filename,
+                'public'
+            );
+            $data['image'] = $path;
+        }
+
+        $artist->update($data);
 
         return redirect()->route('artists.index')
             ->with('success', 'Artist updated successfully.');
@@ -56,6 +91,10 @@ class ArtistController extends Controller
 
     public function delete(Artist $artist)
     {
+        if ($artist->image) {
+            Storage::disk('public')->deleteDirectory("artists/{$artist->id}");
+        }
+
         $artist->delete();
 
         return redirect()->route('artists.index')

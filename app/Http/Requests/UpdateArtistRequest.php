@@ -25,6 +25,7 @@ class UpdateArtistRequest extends FormRequest
         return [
             'code' => ['sometimes', 'string', 'max:50', Rule::unique('artists', 'code')->ignore($this->artist)],
             'name' => ['sometimes', 'string', 'max:255'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
         ];
     }
 }

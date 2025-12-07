@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { Link } from "@inertiajs/react";
-import { AudioLines } from "lucide-react";
+import { AudioLines, LogOut, User } from "lucide-react";
+import { useAuth } from "../configs";
+import UserProfile from "./user-profile";
 
 function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
+    const { user, logout } = useAuth();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
+    };
+
+    const handleLogout = () => {
+        logout();
     };
 
     return (
@@ -46,6 +53,12 @@ function Navigation() {
                         >
                             Albums
                         </Link>
+
+                        {user && (
+                            <div className="flex items-center gap-4 ml-4 pl-4 border-l border-primary/20">
+                                <UserProfile />
+                            </div>
+                        )}
                     </div>
 
                     <div className="md:hidden">
@@ -120,6 +133,34 @@ function Navigation() {
                         >
                             Albums
                         </Link>
+
+                        {user && (
+                            <>
+                                <div className="border-t border-primary/20 pt-3 mt-3">
+                                    <div className="flex items-center gap-2 px-3 py-2 text-muted-foreground">
+                                        <User className="w-4 h-4" />
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-medium">
+                                                {user.name}
+                                            </span>
+                                            <span className="text-xs text-muted-foreground">
+                                                {user.email}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            setIsOpen(false);
+                                            handleLogout();
+                                        }}
+                                        className="flex items-center gap-2 w-full px-3 py-2 rounded-md text-base font-medium text-destructive hover:bg-destructive/10 transition-colors"
+                                    >
+                                        <LogOut className="w-4 h-4" />
+                                        Logout
+                                    </button>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             )}

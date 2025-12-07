@@ -21,11 +21,8 @@ export const getArtistColumns = (actions) => [
         label: "",
         render: (_, row) => (
             <Avatar className="w-16 h-16">
-                <AvatarImage
-                    src={row.image || "/assets/images/artist-profile.png"}
-                    alt={row.name}
-                />
-                <AvatarFallback>
+                <AvatarImage src={row.image_url} alt={row.name} />
+                <AvatarFallback className="bg-primary/20 text-primary font-semibold">
                     {row.name?.substring(0, 2).toUpperCase()}
                 </AvatarFallback>
             </Avatar>

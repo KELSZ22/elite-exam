@@ -1,5 +1,5 @@
 import React from "react";
-import { FormModal, InputField } from "../../../components";
+import { FormModal, InputField, ImageUpload } from "../../../components";
 import PropTypes from "prop-types";
 import { useForm } from "@inertiajs/react";
 import { useToast } from "../../../hooks";
@@ -10,11 +10,13 @@ function CreateArtist({ open, onOpenChange }) {
         useForm({
             code: "",
             name: "",
+            image: null,
         });
 
     const handleSubmit = (e) => {
         e.preventDefault();
         post("/artists", {
+            forceFormData: true,
             onSuccess: () => {
                 onOpenChange(false);
                 reset();
@@ -34,6 +36,16 @@ function CreateArtist({ open, onOpenChange }) {
             isSubmitting={processing}
         >
             <div className="flex flex-col gap-4">
+                <ImageUpload
+                    label="Artist Image"
+                    name="image"
+                    value={data.image}
+                    onChange={(file) => {
+                        setData("image", file);
+                        setError("image", null);
+                    }}
+                    error={errors.image}
+                />
                 <InputField
                     label="Code"
                     name="code"
