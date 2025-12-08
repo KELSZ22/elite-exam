@@ -16,7 +16,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email' => ['required', 'email'],
+            'name' => ['required', 'string'],
             'password' => ['required'],
         ]);
 
@@ -24,12 +24,12 @@ class AuthController extends Controller
             return $this->validationErrorResponse($validator->errors());
         }
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('name', $request->name)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return $this->errorResponse(
                 'The provided credentials do not match our records.',
-                ['email' => ['The provided credentials do not match our records.']],
+                ['name' => ['The provided credentials do not match our records.']],
                 401
             );
         }

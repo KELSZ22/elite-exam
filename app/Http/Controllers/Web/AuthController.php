@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
 class AuthController extends Controller
@@ -17,19 +19,22 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'name' => ['required', 'string'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        $user = User::where('name', $request->name)->first();
 
-            return redirect()->intended('/dashboard');
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'name' => 'The provided credentials do not match our records.',
+            ])->onlyInput('name');
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        Auth::login($user, $request->boolean('remember'));
+        $request->session()->regenerate();
+
+        return redirect()->intended('/dashboard');
     }
 
     public function logout(Request $request)

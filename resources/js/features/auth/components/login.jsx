@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 function LoginPage() {
     const { data, setData, post, processing, errors, setError } = useForm({
-        email: "",
+        name: "",
         password: "",
         remember: false,
     });
@@ -53,17 +53,17 @@ function LoginPage() {
 
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <InputField
-                                    label="Email"
-                                    name="email"
-                                    type="email"
-                                    placeholder="keldev@gmail.com"
-                                    value={data.email}
+                                    label="Username"
+                                    name="name"
+                                    type="text"
+                                    placeholder="Enter your username"
+                                    value={data.name}
                                     onChange={(e) => {
-                                        setData("email", e.target.value);
-                                        setError("email", null);
+                                        setData("name", e.target.value);
+                                        setError("name", null);
                                     }}
                                     required
-                                    error={errors.email}
+                                    error={errors.name}
                                 />
 
                                 <PasswordField
