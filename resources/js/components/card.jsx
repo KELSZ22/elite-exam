@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Disc3, Calendar, TrendingUp, User } from "lucide-react";
+import { Disc3, Calendar, TrendingUp, User, Clock } from "lucide-react";
 import ActionDropdown from "./action-dropdown";
 import { useCurrency } from "../hooks";
 
@@ -100,9 +100,20 @@ Card.propTypes = {
 function AlbumCard({ album, actions = [] }) {
     const formatCurrency = useCurrency();
 
+    const formatDate = (dateString) => {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+    };
+
     const stats = [
         { icon: Calendar, value: album.year || "N/A" },
         { icon: TrendingUp, value: formatCurrency(album.sales) },
+        { icon: Clock, value: formatDate(album.updated_at) },
     ];
 
     return (

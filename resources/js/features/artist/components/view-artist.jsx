@@ -13,7 +13,7 @@ function ViewArtist({ open, onOpenChange, artist, onClose: _onClose }) {
         <ViewModal open={open} onOpenChange={onOpenChange} size="md" noPadding>
             <div className="relative overflow-hidden rounded-lg">
                 {artist?.image_url ? (
-                    <div className="w-full h-64 overflow-hidden">
+                    <div className="w-full h-96 overflow-hidden">
                         <img
                             src={artist.image_url}
                             alt={artist?.name || "Artist Profile"}

@@ -9,9 +9,7 @@ use Illuminate\Support\Str;
 
 class AlbumSalesSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+  
     public function run(): void
     {
         $csvFile = base_path('Data Reference (ALBUM SALES).csv');
@@ -23,7 +21,6 @@ class AlbumSalesSeeder extends Seeder
 
         $handle = fopen($csvFile, 'r');
         
-        // Skip header row
         fgetcsv($handle);
         
         $artistCache = [];
@@ -37,7 +34,6 @@ class AlbumSalesSeeder extends Seeder
             $sales = (float) str_replace(',', '', $row[2]);
             $dateReleased = $this->parseDate($row[3]);
             
-            // Get or create artist
             if (!isset($artistCache[$artistName])) {
                 $artist = Artist::firstOrCreate(
                     ['name' => $artistName],
@@ -46,7 +42,6 @@ class AlbumSalesSeeder extends Seeder
                 $artistCache[$artistName] = $artist->id;
             }
 
-            // Create album
             Album::create([
                 'artist_id' => $artistCache[$artistName],
                 'name' => $albumName,
@@ -62,14 +57,11 @@ class AlbumSalesSeeder extends Seeder
         $this->command->info("Seeded {$count} albums from " . count($artistCache) . " artists.");
     }
 
-    /**
-     * Parse date from YYMMDD format
-     */
+    
     private function parseDate(string $dateString): \DateTime
     {
         $dateString = trim($dateString);
         
-        // Format: YYMMDD (e.g., 220117 = 2022-01-17)
         $year = '20' . substr($dateString, 0, 2);
         $month = substr($dateString, 2, 2);
         $day = substr($dateString, 4, 2);
@@ -77,9 +69,7 @@ class AlbumSalesSeeder extends Seeder
         return new \DateTime("{$year}-{$month}-{$day}");
     }
 
-    /**
-     * Generate a unique artist code
-     */
+  
     private function generateArtistCode(string $artistName): string
     {
         // Create code from first letters + random string

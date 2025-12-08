@@ -1,11 +1,21 @@
 import React from "react";
 import { ViewModal } from "../../../components";
 import PropTypes from "prop-types";
-import { X, Music2, Calendar, TrendingUp, User } from "lucide-react";
+import { X, Music2, Calendar, TrendingUp, User, Clock, CalendarDays } from "lucide-react";
 import { useCurrency } from "../../../hooks";
 
 function ViewAlbum({ open, onOpenChange, album }) {
     const formatCurrency = useCurrency();
+
+    const formatDate = (dateString) => {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+    };
 
     return (
         <ViewModal open={open} onOpenChange={onOpenChange} size="md" noPadding>
@@ -39,7 +49,7 @@ function ViewAlbum({ open, onOpenChange, album }) {
                                 </h3>
                             </div>
 
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid grid-cols-2 gap-4">
                                 <div className="flex items-center gap-2 px-3 py-2 rounded-lg backdrop-blur-md bg-primary/10 border border-primary/20">
                                     <User className="w-4 h-4 text-primary" />
                                     <div className="flex flex-col">
@@ -72,6 +82,30 @@ function ViewAlbum({ open, onOpenChange, album }) {
                                         </span>
                                         <span className="text-sm font-medium text-white/90">
                                             {formatCurrency(album?.sales)}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 px-3 py-2 rounded-lg backdrop-blur-md bg-primary/10 border border-primary/20">
+                                    <CalendarDays className="w-4 h-4 text-primary" />
+                                    <div className="flex flex-col">
+                                        <span className="text-xs text-primary/70">
+                                            Release Date
+                                        </span>
+                                        <span className="text-sm font-medium text-white/90">
+                                            {formatDate(album?.created_at)}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-2 px-3 py-2 rounded-lg backdrop-blur-md bg-primary/10 border border-primary/20">
+                                    <Clock className="w-4 h-4 text-primary" />
+                                    <div className="flex flex-col">
+                                        <span className="text-xs text-primary/70">
+                                            Last Updated
+                                        </span>
+                                        <span className="text-sm font-medium text-white/90">
+                                            {formatDate(album?.updated_at)}
                                         </span>
                                     </div>
                                 </div>
