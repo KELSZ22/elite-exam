@@ -4,6 +4,7 @@ import {
     SearchInput,
     AlbumCard,
     PageHeader,
+    AlbumsSkeleton,
 } from "../../../components";
 import {
     ArrowUpDown,
@@ -35,17 +36,20 @@ function Albums() {
 
     useEffect(() => {
         if (albums?.data) {
-            setAlbumsList(albums.data);
+            const isFirstPage = !albums.prev_page_url;
+            if (isFirstPage) {
+                setAlbumsList(albums.data);
+            }
         }
-    }, [albums?.data]);
+    }, [albums?.data, albums?.prev_page_url]);
 
     useEffect(() => {
         router.get("/albums", buildParams(), {
             preserveState: true,
             preserveScroll: true,
             replace: true,
-            onSuccess: () => {},
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedSearch]);
 
     const handleLoadMore = () => {
@@ -62,7 +66,15 @@ function Albums() {
                 only: ["albums"],
                 onSuccess: (page) => {
                     const newAlbums = page.props.albums?.data || [];
-                    setAlbumsList((prev) => [...prev, ...newAlbums]);
+                    setAlbumsList((prev) => {
+                        const existingIds = new Set(
+                            prev.map((album) => album.id)
+                        );
+                        const uniqueNewAlbums = newAlbums.filter(
+                            (album) => !existingIds.has(album.id)
+                        );
+                        return [...prev, ...uniqueNewAlbums];
+                    });
                     setIsLoadingMore(false);
                 },
                 onError: () => {
@@ -106,6 +118,10 @@ function Albums() {
             separator: true,
         },
     ];
+
+    if (!albums) {
+        return <AlbumsSkeleton />;
+    }
 
     return (
         <div className="container mx-auto px-4">

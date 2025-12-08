@@ -36,10 +36,10 @@ function UpdateAlbum({ open, onOpenChange, album }) {
         e.preventDefault();
 
         const formData = {
-            _method: "PUT",
-            artist_id: data.artist_id,
-            name: data.name,
-            year: data.year,
+                _method: "PUT",
+                artist_id: data.artist_id,
+                name: data.name,
+                year: data.year,
             sales: data.sales || "",
         };
 
@@ -48,17 +48,17 @@ function UpdateAlbum({ open, onOpenChange, album }) {
         }
 
         router.post(`/albums/${album.id}`, formData, {
-            forceFormData: true,
-            onSuccess: () => {
-                onOpenChange(false);
-                reset();
-                toast.success("Album updated successfully!");
-            },
+                forceFormData: true,
+                onSuccess: () => {
+                    onOpenChange(false);
+                    reset();
+                    toast.success("Album updated successfully!");
+                },
             onError: (errors) => {
                 const firstError = Object.values(errors)[0];
                 if (firstError) {
                     toast.error(Array.isArray(firstError) ? firstError[0] : firstError);
-                }
+            }
             },
         });
     };

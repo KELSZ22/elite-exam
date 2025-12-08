@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('albums')->controller(\App\Http\Controllers\Api\AlbumController::class)->group(function(){
+Route::prefix('albums')->controller(\App\Http\Controllers\Api\AlbumController::class)->middleware('auth:sanctum')->group(function(){
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{album}', 'show');

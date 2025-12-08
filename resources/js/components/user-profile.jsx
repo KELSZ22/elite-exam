@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { LogOut } from "lucide-react";
 import { useAuth } from "../configs";
 import {
@@ -12,15 +12,22 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { getInitials } from "../utils/initials";
+import { ConfirmModal } from "./modals";
 
 function UserProfile() {
     const { user, logout } = useAuth();
+    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
     if (!user) {
         return null;
     }
 
-    const handleLogout = () => {
+    const handleLogoutClick = () => {
+        setIsLogoutModalOpen(true);
+    };
+
+    const handleConfirmLogout = () => {
+        setIsLogoutModalOpen(false);
         logout();
     };
 
@@ -52,7 +59,7 @@ function UserProfile() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                    onClick={handleLogout}
+                    onClick={handleLogoutClick}
                     variant="destructive"
                     className="cursor-pointer text-destructive focus:text-destructive focus:bg-destructive/10"
                 >
@@ -60,6 +67,16 @@ function UserProfile() {
                     <span>Log out</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
+            <ConfirmModal
+                open={isLogoutModalOpen}
+                onOpenChange={setIsLogoutModalOpen}
+                title="Confirm Logout"
+                description="Are you sure you want to log out?"
+                onConfirm={handleConfirmLogout}
+                confirmText="Log out"
+                cancelText="Cancel"
+                variant="destructive"
+            />
         </DropdownMenu>
     );
 }

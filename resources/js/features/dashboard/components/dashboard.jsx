@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { usePage, router, Head } from "@inertiajs/react";
 import { Users, Disc3, TrendingUp, BarChart3 } from "lucide-react";
-import { PageHeader } from "../../../components";
+import { PageHeader, DashboardSkeleton } from "../../../components";
 import StatsCard from "./stats-card";
 import TopArtistSpotlight from "./top-artist-spotlight";
 import ArtistStatsTable from "./artist-stats-table";
@@ -83,6 +83,10 @@ function Dashboard() {
             (sum, a) => sum + (parseFloat(a.total_sales) || 0),
             0
         ) || 0;
+
+    if (!artistStats && !topArtist) {
+        return <DashboardSkeleton />;
+    }
 
     return (
         <div className="container mx-auto px-4">

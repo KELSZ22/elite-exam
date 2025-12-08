@@ -16,6 +16,7 @@ class ArtistController extends Controller
     public function index(Request $request)
     {
         $artists = Artist::withCount('albums')
+            ->with('albums:id,artist_id,year,name,sales,updated_at')
             ->when($request->filled('sort_order'), function ($query) use ($request) {
                 $query->orderBy('name', $request->sort_order);
             }, function ($query) {
@@ -59,9 +60,9 @@ class ArtistController extends Controller
 
     public function show(Artist $artist)
     {
-        $artist->with('albums:id,artist_id,year,name,sales,updated_at')->get();
+        $artist->load('albums:id,artist_id,year,name,sales,updated_at');
 
-        return Inertia::render('Artist/Show', [
+        return Inertia::render('artists/artist-page', [
             'artist' => $artist,
         ]);
     }

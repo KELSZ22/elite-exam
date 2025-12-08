@@ -122,7 +122,7 @@ function AlbumSearchSection({
     );
 }
 
-function EmptyState({ icon: Icon, message, dashed = false }) {
+function EmptyState({ message, dashed = false }) {
     return (
         <div
             className={`flex flex-col items-center justify-center py-12 text-center h-full rounded-xl border bg-gradient-to-br from-background to-primary/5 ${

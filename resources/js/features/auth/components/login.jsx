@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, Head } from "@inertiajs/react";
-import { RequireGuest } from "../..";
+import { RequireGuest } from "../../../configs";
 import { InputField, PasswordField } from "../../../components";
 import { AudioLines, LogIn, Loader2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";

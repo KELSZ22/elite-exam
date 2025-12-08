@@ -9,3 +9,4 @@ export { Card, AlbumCard } from "./card";
 export { default as PageHeader } from "./page-header";
 export { default as ImageUpload } from "./image-upload";
 export { default as UserProfile } from "./user-profile";
+export { Skeleton, DashboardSkeleton, ArtistsSkeleton, AlbumsSkeleton } from "./skeleton";

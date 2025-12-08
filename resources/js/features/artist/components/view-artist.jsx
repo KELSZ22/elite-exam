@@ -1,38 +1,30 @@
 import React, { useState } from "react";
 import { ViewModal } from "../../../components";
 import PropTypes from "prop-types";
-import { X, ChevronDown, Disc3 } from "lucide-react";
+import { X, ChevronDown, Disc3, User } from "lucide-react";
 import AlbumsTable from "./albums-table";
 
 function ViewArtist({ open, onOpenChange, artist, onClose: _onClose }) {
     const [showAlbums, setShowAlbums] = useState(false);
 
-    const dummyAlbums = [
-        { id: 1, name: "Midnight Dreams", year: 2024 },
-        { id: 2, name: "Electric Horizons", year: 2023 },
-        { id: 3, name: "Neon Skies", year: 2022 },
-        { id: 4, name: "Lost in Time", year: 2021 },
-        { id: 5, name: "Echoes of Tomorrow", year: 2020 },
-        { id: 6, name: "Midnight Dreams", year: 2024 },
-        { id: 7, name: "Electric Horizons", year: 2023 },
-        { id: 8, name: "Neon Skies", year: 2022 },
-        { id: 9, name: "Lost in Time", year: 2021 },
-        { id: 10, name: "Echoes of Tomorrow", year: 2020 },
-        { id: 11, name: "Midnight Dreams", year: 2024 },
-        { id: 12, name: "Electric Horizons", year: 2023 },
-        { id: 13, name: "Neon Skies", year: 2022 },
-        { id: 14, name: "Lost in Time", year: 2021 },
-        { id: 15, name: "Echoes of Tomorrow", year: 2020 },
-    ];
+    const albums = artist?.albums || [];
 
     return (
         <ViewModal open={open} onOpenChange={onOpenChange} size="md" noPadding>
             <div className="relative overflow-hidden rounded-lg">
-                <img
-                    src={"/assets/images/artist-profile.png"}
-                    alt={"Artist Profile"}
-                    className="w-full h-auto object-cover"
-                />
+                {artist?.image_url ? (
+                    <div className="w-full h-64 overflow-hidden">
+                        <img
+                            src={artist.image_url}
+                            alt={artist?.name || "Artist Profile"}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                ) : (
+                    <div className="w-full h-96 bg-gradient-to-br from-primary/30 via-primary/20 to-background flex items-center justify-center">
+                        <User className="w-32 h-32 text-primary/50" />
+                    </div>
+                )}
 
                 <button
                     onClick={() => onOpenChange(false)}
@@ -99,11 +91,12 @@ function ViewArtist({ open, onOpenChange, artist, onClose: _onClose }) {
                     <div className="p-4 h-[calc(100%-70px)] overflow-y-auto [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-background/50 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-primary/30 hover:[&::-webkit-scrollbar-thumb]:bg-primary/50">
                         <div className="[&_table]:text-white/90 [&_th]:text-primary/80 [&_td]:text-foreground/70 [&_tr]:border-primary/10">
                             <AlbumsTable
-                                data={dummyAlbums}
+                                data={albums}
                                 columns={[
                                     { key: "name", label: "Title" },
                                     { key: "year", label: "Year" },
                                 ]}
+                                emptyMessage="No albums found for this artist"
                             />
                         </div>
                     </div>

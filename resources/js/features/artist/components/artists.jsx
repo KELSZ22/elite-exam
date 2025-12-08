@@ -4,8 +4,9 @@ import {
     ConfirmModal,
     SearchInput,
     PageHeader,
+    ArtistsSkeleton,
 } from "../../../components";
-import { ArrowUpDown, Users, Plus, Headphones } from "lucide-react";
+import { ArrowUpDown, Plus, Headphones } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePage, router, Head } from "@inertiajs/react";
 import { useQueryParams } from "../../../hooks";
@@ -39,6 +40,7 @@ function Artists() {
             preserveScroll: true,
             replace: true,
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedSearch]);
 
     const handleView = (row) => {
@@ -75,6 +77,10 @@ function Artists() {
     const columns = getArtistColumns(actions);
 
     const tableData = artists?.data || [];
+
+    if (!artists) {
+        return <ArtistsSkeleton />;
+    }
 
     return (
         <div className="container mx-auto px-4">
